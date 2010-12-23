@@ -17,11 +17,11 @@ class CCacheStorage implements IDataStorage
 	/**
 	 * Save model in storage
 	 *
-	 * @param IStoragedModel $model
+	 * @param IStorageModel $model
 	 * @return void
 	 * @todo check result of insert
 	 */
-	public function insert(IStoragedModel $model)
+	public function insert(IStorageModel $model)
 	{
 		if(is_null($model->getPrimaryKey()))
 		{
@@ -34,9 +34,9 @@ class CCacheStorage implements IDataStorage
 	/**
 	 * Update model in storage
 	 *
-	 * @param IStoragedModel $model
+	 * @param IStorageModel $model
 	 */
-	public function update(IStoragedModel $model)
+	public function update(IStorageModel $model)
 	{
 		if(is_null($model->getPrimaryKey()))
 			throw new CStorageException(Yii::t("db.storage","Primary key is not setted"));
@@ -128,10 +128,10 @@ class CCacheStorage implements IDataStorage
 			throw new CStorageException(Yii::t("db.storage", "Cache component is not instance of CCache"));
 	}
 	/**
-	 * @param IStoragedModel $model
+	 * @param IStorageModel $model
 	 * @return string
 	 */
-	protected function getModelKey(IStoragedModel $model)
+	protected function getModelKey(IStorageModel $model)
 	{
 		return $this->getKey(
 			get_class($model),

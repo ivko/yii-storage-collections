@@ -1,5 +1,22 @@
 <?php
+/**
+ * File contains class CStorageCollection
+ *
+ * @author mitallast <mitallast@gmail.com>
+ * @link http://github.com/mitallast/yii-srorage-collections
+ * @copyright Copyright &copy 2010-2011 mitallast
+ * @license MIT license
+ */
 
+/**
+ * Class CStorageCollection
+ *
+ * @author mitallast <mitallast@gmail.com>
+ * @version 0.1
+ * @package system
+ * @since 0.1
+ * @throws CStorageException
+ */
 class CStorageCollection extends CTypedList implements IDataStorage
 {
 	/**
@@ -12,10 +29,10 @@ class CStorageCollection extends CTypedList implements IDataStorage
 	/**
 	 * Insert new model and set it primary key
 	 *
-	 * @param IStoragedModel $model
+	 * @param IStorageModel $model
 	 * @return void
 	 */
-	public function insert(IStoragedModel $model)
+	public function insert(IStorageModel $model)
 	{
 		foreach($this as $storage)
 			$storage->insert($model);
@@ -23,10 +40,10 @@ class CStorageCollection extends CTypedList implements IDataStorage
 	/**
 	 * Update model by setted primary key
 	 *
-	 * @param IStoragedModel $model
+	 * @param IStorageModel $model
 	 * @return void
 	 */
-	public function update(IStoragedModel $model)
+	public function update(IStorageModel $model)
 	{
 		foreach($this as $storage)
 			$storage->update($model);
@@ -63,7 +80,7 @@ class CStorageCollection extends CTypedList implements IDataStorage
 	 *
 	 * @param string $type
 	 * @param int $primaryKey
-	 * @return IStoragedModel
+	 * @return IStorageModel
 	 */
 	public function findByPk($type, $primaryKey)
 	{

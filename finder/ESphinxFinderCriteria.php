@@ -1,12 +1,23 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: php2
- * Date: 15.12.10
- * Time: 14:26
- * To change this template use File | Settings | File Templates.
+ * File contains class ESphinxFinderCriteria
+ *
+ * @author mitallast <mitallast@gmail.com>
+ * @link http://github.com/mitallast/yii-srorage-collections
+ * @copyright Copyright &copy 2010-2011 mitallast
+ * @license MIT license
  */
- 
+
+/**
+ * Class ESphinxFinderCriteria
+ *
+ * @author mitallast <mitallast@gmail.com>
+ * @version 0.1
+ * @package system
+ * @since 0.1
+ * @throws CStorageException
+ * @todo add implementation
+ */
 class ESphinxFinderCriteria extends ESphinxCriteria implements IDataFinderCriteria
 {
 	

@@ -26,11 +26,11 @@ class CDbStorage implements IDataStorage
 	/**
 	 * Save model in storage
 	 *
-	 * @param IStoragedModel $model
+	 * @param IStorageModel $model
 	 * @return void
 	 * @todo check result of insert
 	 */
-	public function insert(IStoragedModel $model)
+	public function insert(IStorageModel $model)
 	{
 		$cb = $this->getDbConnection()->getCommandBuilder();
 		$table = $this->getModelTable(get_class($model));
@@ -45,9 +45,9 @@ class CDbStorage implements IDataStorage
 	/**
 	 * Update model in storage
 	 *
-	 * @param IStoragedModel $model
+	 * @param IStorageModel $model
 	 */
-	public function update(IStoragedModel $model)
+	public function update(IStorageModel $model)
 	{
 		if(is_null($model->getPrimaryKey()))
 			throw new CStorageException(Yii::t("db.storage","Primary key is not setted"));

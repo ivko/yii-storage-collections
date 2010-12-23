@@ -1,22 +1,38 @@
 <?php
+/**
+ * File contains interface IDataStorage
+ *
+ * @author mitallast <mitallast@gmail.com>
+ * @link http://github.com/mitallast/yii-srorage-collections
+ * @copyright Copyright &copy 2010-2011 mitallast
+ * @license MIT license
+ */
 
-
+/**
+ * Interface IDataStorage
+ *
+ * @author mitallast <mitallast@gmail.com>
+ * @version 0.1
+ * @package system
+ * @since 0.1
+ * @throws CStorageException
+ */
 interface IDataStorage
 {
 	/**
 	 * Save model in storage
 	 *
-	 * @param IStoragedModel $model
+	 * @param IStorageModel $model
 	 * @return void
 	 * @todo check result of insert
 	 */
-	function insert(IStoragedModel $model);
+	function insert(IStorageModel $model);
 	/**
 	 * Update model in storage
 	 *
-	 * @param IStoragedModel $model
+	 * @param IStorageModel $model
 	 */
-	function update(IStoragedModel $model);
+	function update(IStorageModel $model);
 	/**
 	 * Delete model from storage
 	 *

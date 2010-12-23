@@ -3,7 +3,7 @@
  * File contains interface IStorageModel
  *
  * @author mitallast <mitallast@gmail.com>
- * @link http://github.com/mitallast
+ * @link http://github.com/mitallast/yii-srorage-collections
  * @copyright Copyright &copy 2010-2011 mitallast
  * @license MIT license
  */
