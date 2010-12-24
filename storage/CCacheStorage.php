@@ -1,12 +1,22 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: php2
- * Date: 14.12.10
- * Time: 11:12
- * To change this template use File | Settings | File Templates.
+ * File contains class CCacheStorage
+ *
+ * @author mitallast <mitallast@gmail.com>
+ * @link http://github.com/mitallast/yii-srorage-collections
+ * @copyright Copyright &copy 2010-2011 mitallast
+ * @license MIT license
  */
- 
+
+/**
+ * Class CCacheStorage
+ *
+ * @author mitallast <mitallast@gmail.com>
+ * @version 0.1
+ * @package system
+ * @since 0.1
+ * @throws CStorageException
+ */
 class CCacheStorage implements IDataStorage
 {
 	/**
