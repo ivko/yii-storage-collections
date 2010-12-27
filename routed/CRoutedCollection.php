@@ -26,7 +26,6 @@ abstract class CRoutedCollection extends CTypedList implements IDataStorage
 	{
 		parent::__construct("IDataStorage");
 	}
-	
 	/**
 	 * Delete model from storage
 	 *
@@ -38,7 +37,6 @@ abstract class CRoutedCollection extends CTypedList implements IDataStorage
 	{
 		$this->getShardForDelete($type, $primaryKey)->delete($type, $primaryKey);
 	}
-
 	/**
 	 * Check exists model in storage by pk
 	 *
@@ -50,14 +48,12 @@ abstract class CRoutedCollection extends CTypedList implements IDataStorage
 	{
 		$this->getShardForSelect($type, $primaryKey)->exists($type, $primaryKey);
 	}
-
 	/**
 	 * Get models by primary key list
 	 *
 	 * @param  $type
 	 * @param array $primaryKeyList
 	 * @return void
-	 * @todo add implementation
 	 */
 	public function findAllByPk($type, array $primaryKeyList)
 	{
@@ -65,8 +61,8 @@ abstract class CRoutedCollection extends CTypedList implements IDataStorage
 		foreach($primaryKeyList as $key)
 			if($model = $this->findByPk($type, $key))
 				$list->add($model);
+		return $list;
 	}
-
 	/**
 	 * Get model by primary key
 	 *
@@ -80,31 +76,18 @@ abstract class CRoutedCollection extends CTypedList implements IDataStorage
 			->getShardForSelect($type, $primaryKey)
 			->findByPk($type, $primaryKey);
 	}
-
 	/**
 	 * Save model in storage
 	 *
 	 * @param IStorageModel $model
 	 * @return void
-	 * @todo check result of insert
 	 */
 	public function insert(IStorageModel $model)
 	{
-		if(is_null($model->getPrimaryKey()))
-		{
-			$key = $this->generatePrimaryKey();
-			if(is_null($key))
-			{
-				throw new CRoutedException(Yii::t('mapper.routed', 'Primary key is null'));
-			}
-			$model->setPrimaryKey($key);
-		}
-
 		return $this
 			->getShardForCreate(get_class($model))
 			->insert($model);
 	}
-
 	/**
 	 * Update model in storage
 	 *
@@ -117,26 +100,35 @@ abstract class CRoutedCollection extends CTypedList implements IDataStorage
 			->update($model);
 	}
 	/**
+	 * Get storage component for create new model. 
+	 * As example, if application using sharding, rule can be $id = ( microtime(1) * 1000000) % $this->count.
+	 * 
 	 * @abstract
 	 * @return IDataStorage
 	 */
 	abstract protected function getShardForCreate($type);
 	/**
+	 * Get storage component for update model.
+	 * As example, rule (int)$primaryKey % $this->count().
+	 *
 	 * @abstract
 	 * @return IDataStorage
 	 */
 	abstract protected function getShardForUpdate($type, $primaryKey);
 	/**
+	 * Get storage component for delete model by primary key.
+	 * As default, you can use logic of getShardForUpdate.
+	 * 
 	 * @abstract
 	 * @return IDataStorage
 	 */
 	abstract protected function getShardForDelete($type, $primaryKey);
 	/**
+	 * Get storage component for select model by primary key. 
+	 * As default, you can use logic of getShardForUpdate.
+	 *
 	 * @abstract
 	 * @return IDataStorage
 	 */
 	abstract protected function getShardForSelect($type, $primaryKey);
-
-	abstract protected function generatePrimaryKey();
-
 }
