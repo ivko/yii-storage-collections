@@ -1,1 +1,120 @@
-This extention implements instruments to create applications using sharding , replication and other technologies, using multiple databases.
+This extention implements instruments to create applications using 
+sharding , replication and other technologies, using multiple databases.
+
+How it works.
+
+You create controller:
+<code>
+class Post extends CController
+{
+	/**
+	 * Show full post description
+	 *
+	 * @param int $id post id
+	 * @throws CHttpException if post not found
+	 */
+	public function actionView($id)
+	{
+		$post = Yii::app()->storage->findByPk('Post', $id);
+		if(is_null($post))
+		{
+			throw new CHttpException(404, Yii::t('app', 'Post not found'));
+		}
+		
+		$this->render('view', array(
+			'post' => $post;
+		));
+	}
+}
+</code>
+
+It's like very simple. But what is doing, when controller call storage->findByPk() method ?
+In this example, storage is component with interface IDataStorage - simple crud api. 
+If it a small project, it's need one server with DB , Sphinx and memcache if needed. Config of storage component like this:
+<code>
+return array(
+	...
+	"components" => array(
+		"storage" => array(
+			"class"=>"CDbStorage",
+			"connection"=>"db" // component with mysql connection
+		),
+		...
+	),
+	...
+);
+</code>
+
+controller will be use only mysql. But what is doing, when one mysql contains millions rows , and time of selection is big? 
+An example, it's possible use sharding! I'm can get CRoutedCollection and add to it logic of shard rules, and name it as SimpleShardedCollection class:
+return array(
+	...
+	"components" => array(
+		"mysqlStorage1" => array("class" => "CDbStorage", "connection"=>'db1', ...),
+		"mysqlStorage2" => array("class" => "CDbStorage", "connection"=>'db2', ...),
+		"mysqlStorage3" => array("class" => "CDbStorage", "connection"=>'db3', ...),
+		"mysqlStorage4" => array("class" => "CDbStorage", "connection"=>'db4', ...),
+		"storage" => array(
+			"class" => "SimpleShardedCollection",
+			"items" => array(
+				"mysqlStorage1",
+				"mysqlStorage2",
+				"mysqlStorage3",
+				"mysqlStorage4",
+			),
+		),
+		...
+	),
+	...
+);
+</code>
+
+In this example, I'm not rewrite controller code, I'm add new rules in config - it's can do it system administrator.
+
+As example, it's possible to use two collections, optimised to read and write models in storages - like add memcached:
+
+return array(
+	...
+	"components" => array(
+		"mysqlStorage1" => array("class" => "CDbStorage", "connection"=>'db1', ...),
+		"mysqlStorage2" => array("class" => "CDbStorage", "connection"=>'db2', ...),
+		"mysqlStorage3" => array("class" => "CDbStorage", "connection"=>'db3', ...),
+		"mysqlStorage4" => array("class" => "CDbStorage", "connection"=>'db4', ...),
+		
+		"memcached" => array(),
+		
+		"mysqlStorage" => array(
+			"class" => "SimpleShardedCollection",
+			"items" => array(
+				"mysqlStorage1",
+				"mysqlStorage2",
+				"mysqlStorage3",
+				"mysqlStorage4",
+			),
+		),
+		"storageRead" => array(
+			"class" => "CStorageCollection",
+			"items" => array(
+				"memcached",
+				"mysqlStorage",
+			),
+		),
+		"storageWrite" => array(
+			"class" => "CStorageCollection",
+			"items" => array(
+				"memcached",
+				"mysqlStorage",
+			),
+		),
+		...
+	),
+	...
+);
+</code>
+
+And use it in your controller by type of crud operation. Also, it helps when it's need using replication over sharding - it's need write only in "master" storages.
+Of couse, you must do refactoring controllers when use this logic partition.
+
+Search.
+
+At this time, it's no implementation selection by columns filtering. You must understand, that selections by mysql is not fast. Now, it's many programs can filter data more faster then mysql - it's Sphinx search as example. Sphinx using not only for fulltext search. You can use it in listings, market filters, sorting, agregaing information, save it as sphinx attributes.
