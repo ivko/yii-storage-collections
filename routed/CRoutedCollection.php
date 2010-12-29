@@ -17,15 +17,8 @@
  * @since 0.1
  * @abstract
  */
-abstract class CRoutedCollection extends CTypedList implements IDataStorage
+abstract class CRoutedCollection extends CBaseStorageCollection implements IDataStorage
 {
-	/**
-	 * Constructor
-	 */
-	public function __construct()
-	{
-		parent::__construct("IDataStorage");
-	}
 	/**
 	 * Delete model from storage
 	 *
@@ -35,7 +28,8 @@ abstract class CRoutedCollection extends CTypedList implements IDataStorage
 	 */
 	public function delete($type, $primaryKey)
 	{
-		$this->getShardForDelete($type, $primaryKey)->delete($type, $primaryKey);
+		$id = $this->getShardIdForDelete($type, $primaryKey);
+		$this->itemAt((int)$id)->delete($type, $primaryKey);
 	}
 	/**
 	 * Check exists model in storage by pk
@@ -46,21 +40,36 @@ abstract class CRoutedCollection extends CTypedList implements IDataStorage
 	 */
 	public function exists($type, $primaryKey)
 	{
-		$this->getShardForSelect($type, $primaryKey)->exists($type, $primaryKey);
+		$id = $this->getShardIdForSelect($type, $primaryKey);
+		$this->itemAt((int)$id)->exists($type, $primaryKey);
 	}
 	/**
 	 * Get models by primary key list
 	 *
 	 * @param  $type
 	 * @param array $primaryKeyList
-	 * @return void
+	 * @return IModelStorage[]
 	 */
 	public function findAllByPk($type, array $primaryKeyList)
 	{
-		$list = new CDataCollection;
+		$list = array();
+
+		$hashList = array();
 		foreach($primaryKeyList as $key)
-			if($model = $this->findByPk($type, $key))
-				$list->add($model);
+		{
+			$id = $this->getShardIdForSelect($type, $key);
+			if(!isset($hashList[$id]))
+				$hashList[$id] = array($key);
+			else
+				$hashList[$id][] = $key;
+		}
+
+		foreach($hashList as $id => $listKey)
+		{
+			$data = $this->itemAt($id)->findAllByPk($type, $listKey);
+			$list = array_merge($list, $data);
+		}
+
 		return $list;
 	}
 	/**
@@ -73,7 +82,7 @@ abstract class CRoutedCollection extends CTypedList implements IDataStorage
 	public function findByPk($type, $primaryKey)
 	{
 		return $this
-			->getShardForSelect($type, $primaryKey)
+			->getShardIdForSelect($type, $primaryKey)
 			->findByPk($type, $primaryKey);
 	}
 	/**
@@ -85,7 +94,7 @@ abstract class CRoutedCollection extends CTypedList implements IDataStorage
 	public function insert(IStorageModel $model)
 	{
 		return $this
-			->getShardForCreate(get_class($model))
+			->getShardIdForCreate(get_class($model))
 			->insert($model);
 	}
 	/**
@@ -106,7 +115,7 @@ abstract class CRoutedCollection extends CTypedList implements IDataStorage
 	 * @abstract
 	 * @return IDataStorage
 	 */
-	abstract protected function getShardForCreate($type);
+	abstract protected function getShardIdForCreate($type);
 	/**
 	 * Get storage component for update model.
 	 * As example, rule (int)$primaryKey % $this->count().
@@ -122,7 +131,7 @@ abstract class CRoutedCollection extends CTypedList implements IDataStorage
 	 * @abstract
 	 * @return IDataStorage
 	 */
-	abstract protected function getShardForDelete($type, $primaryKey);
+	abstract protected function getShardIdForDelete($type, $primaryKey);
 	/**
 	 * Get storage component for select model by primary key. 
 	 * As default, you can use logic of getShardForUpdate.
@@ -130,5 +139,5 @@ abstract class CRoutedCollection extends CTypedList implements IDataStorage
 	 * @abstract
 	 * @return IDataStorage
 	 */
-	abstract protected function getShardForSelect($type, $primaryKey);
+	abstract protected function getShardIdForSelect($type, $primaryKey);
 }

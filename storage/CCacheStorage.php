@@ -90,7 +90,13 @@ class CCacheStorage implements IDataStorage
 	 */
 	public function findByPk($type, $primaryKey)
 	{
-		return $this->getCache()->get($this->getKey($type, $primaryKey));
+		Yii::beginProfile(__METHOD__, 'ext.storage');
+
+		$data = $this->getCache()->get($this->getKey($type, $primaryKey));
+
+		Yii::endProfile(__METHOD__, 'ext.storage');
+		
+		return $data;
 	}
 	/**
 	 * Get models by primary key list
@@ -101,13 +107,18 @@ class CCacheStorage implements IDataStorage
 	 */
 	public function findAllByPk($type, array $primaryKeyList)
 	{
-		$list = new CDataCollection;
-		foreach($primaryKeyList as $key)
-		{
-			$model = $this->findByPk($type, $key);
-			if($model)
-				$list->add($model);
-		}
+		Yii::beginProfile(__METHOD__, 'ext.storage');
+		$list = array();
+		
+		$listKey = $this->getListKey($type, $primaryKeyList);
+		$data = $this->getCache()->mget($listKey);
+		
+		foreach ($data as $item)
+			if($item instanceof $type)
+				$list[] = $item;
+
+		Yii::endProfile(__METHOD__, 'ext.storage');
+		
 		return $list;
 	}
 	/**
@@ -159,5 +170,18 @@ class CCacheStorage implements IDataStorage
 			$type,
 			$primaryKey,
 		)));
+	}
+	/**
+	 * @param  $type
+	 * @param array $primaryKeyList
+	 * @return array
+	 */
+	protected function getListKey($type, array $primaryKeyList)
+	{
+		$list = array();
+		foreach ($primaryKeyList as $primaryKey)
+			$list[] = $this->getKey($type, $primaryKey);
+
+		return $list;
 	}
 }

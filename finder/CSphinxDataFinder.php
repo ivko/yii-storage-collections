@@ -37,7 +37,7 @@ class CSphinxDataFinder extends CAbstractDataFinder implements IDataFinder
 	 *
 	 * @param string $type
 	 * @param IDataFinder $criteria
-	 * @return CDataCollection
+	 * @return IModelStorage[]
 	 * @required set storage
 	 */
 	public function findModels($type, IDataFinderCriteria $criteria)

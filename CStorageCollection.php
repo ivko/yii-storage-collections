@@ -17,15 +17,9 @@
  * @since 0.1
  * @throws CStorageException
  */
-class CStorageCollection extends CTypedList implements IDataStorage
+class CStorageCollection extends CBaseStorageCollection implements IDataStorage
 {
-	/**
-	 * Constructor
-	 */
-	public function __construct()
-	{
-		parent::__construct("IDataStorage");
-	}
+
 	/**
 	 * Insert new model and set it primary key
 	 *
@@ -34,6 +28,7 @@ class CStorageCollection extends CTypedList implements IDataStorage
 	 */
 	public function insert(IStorageModel $model)
 	{
+		/** @var $storage CDbStorage */
 		foreach($this as $storage)
 			$storage->insert($model);
 	}
@@ -45,6 +40,7 @@ class CStorageCollection extends CTypedList implements IDataStorage
 	 */
 	public function update(IStorageModel $model)
 	{
+		/** @var $storage CDbStorage */
 		foreach($this as $storage)
 			$storage->update($model);
 	}
@@ -57,6 +53,7 @@ class CStorageCollection extends CTypedList implements IDataStorage
 	 */
 	public function delete($type, $primaryKey)
 	{
+		/** @var $storage CDbStorage */
 		foreach($this as $storage)
 			$storage->delete($type, $primaryKey);
 	}
@@ -69,6 +66,7 @@ class CStorageCollection extends CTypedList implements IDataStorage
 	 */
 	public function exists($type, $primaryKey)
 	{
+		/** @var $storage CDbStorage */
 		foreach($this as $storage)
 			if($storage->exists($type, $primaryKey))
 				return true;
@@ -84,11 +82,15 @@ class CStorageCollection extends CTypedList implements IDataStorage
 	 */
 	public function findByPk($type, $primaryKey)
 	{
+		Yii::beginProfile(__METHOD__, 'ext.storage');
+		/** @var $storage CDbStorage */
 		foreach($this as $storage)
 		{
 			if(($model = $storage->findByPk($type, $primaryKey)) instanceof $type)
 				return $model;
 		}
+
+		Yii::endProfile(__METHOD__, 'ext.storage');
 		return null;
 	}
 	/**
@@ -100,10 +102,29 @@ class CStorageCollection extends CTypedList implements IDataStorage
 	 */
 	public function findAllByPk($type, array $primaryKeyList)
 	{
-		$list = new CDataCollection;
-		foreach($primaryKeyList as $key)
-			if($model = $this->findByPk($type, $key))
-				$list->add($model);
+		Yii::beginProfile(__METHOD__, 'ext.storage');
+
+		$findList = array();
+		foreach ($primaryKeyList as $key)
+			$findList[$key] = $key;
+		
+		$list = array();
+		foreach ($this as $storage)
+		{
+			$data = $storage->findAllByPk($type, $findList);
+			if(is_array($data))
+			{
+				foreach($data as $model)
+					unset($findList[$model->getPrimaryKey()]);
+				$list = array_merge($list, $data);
+			}
+
+			if(count($data) == count($primaryKeyList))
+				break;
+		}
+
+		Yii::endProfile(__METHOD__, 'ext.storage');
+		
 		return $list;
 	}
 }

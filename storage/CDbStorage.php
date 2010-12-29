@@ -17,7 +17,7 @@
  * @since 0.1
  * @throws CStorageException
  */
-class CDbStorage implements IDataStorage
+class CDbStorage extends CApplicationComponent implements IDataStorage
 {
 	/**
 	 * @var CDbConnection $_db;
@@ -34,7 +34,7 @@ class CDbStorage implements IDataStorage
 	 */
 	private $_model_table_pk;
 	/**
-	 * Inicialise storage
+	 * Initialise storage
 	 */
 	public function __construct()
 	{
@@ -49,14 +49,14 @@ class CDbStorage implements IDataStorage
 	 */
 	public function insert(IStorageModel $model)
 	{
-		$cb = $this->getDbConnection()->getCommandBuilder();
+		$cb = $this->getConnection()->getCommandBuilder();
 		$table = $this->getModelTable(get_class($model));
-		$data = $model->getAttributes();
+		$data = $model->setStoragedAttributes();
 
 		$insert = $cb->createInsertCommand($table, $data);
 		$result = $insert->execute();
 
-		$model->setPrimaryKey( $this->getDbConnection()->getLastInsertID() );
+		$model->setPrimaryKey( $this->getConnection()->getLastInsertID() );
 		return $result;
 	}
 	/**
@@ -69,9 +69,9 @@ class CDbStorage implements IDataStorage
 		if(is_null($model->getPrimaryKey()))
 			throw new CStorageException(Yii::t("db.storage","Primary key is not setted"));
 
-		$cb = $this->getDbConnection()->getCommandBuilder();
+		$cb = $this->getConnection()->getCommandBuilder();
 		$table = $this->getModelTable(get_class($model));
-		$data = $model->getAttributes();
+		$data = $model->setStoragedAttributes();
 
 		$primaryKey = $model->getPrimaryKey();
 		$update = $cb->createUpdateCommand($table, $data, $this->getPkCriteria($table, $primaryKey));
@@ -86,7 +86,7 @@ class CDbStorage implements IDataStorage
 	 */
 	public function delete($type, $primaryKey)
 	{
-		$cb = $this->getDbConnection()->getCommandBuilder();
+		$cb = $this->getConnection()->getCommandBuilder();
 		$table = $this->getModelTable((string)$type);
 
 		return $cb
@@ -102,7 +102,7 @@ class CDbStorage implements IDataStorage
 	 */
 	public function exists($type, $primaryKey)
 	{
-		$cb = $this->getDbConnection()->getCommandBuilder();
+		$cb = $this->getConnection()->getCommandBuilder();
 		$table = $this->getModelTable((string)$type);
 
 		$count = $cb
@@ -120,7 +120,7 @@ class CDbStorage implements IDataStorage
 	 */
 	public function findByPk($type, $primaryKey)
 	{
-		$cb = $this->getDbConnection()->getCommandBuilder();
+		$cb = $this->getConnection()->getCommandBuilder();
 		$table = $this->getModelTable((string)$type);
 
 		$find = $cb->createFindCommand($table,$this->getPkCriteria($table, $primaryKey));
@@ -142,22 +142,26 @@ class CDbStorage implements IDataStorage
 	 */
 	public function findAllByPk($type, array $primaryKeyList)
 	{
-		$cb = $this->getDbConnection()->getCommandBuilder();
+		Yii::beginProfile(__METHOD__, 'ext.storage');
+
+		$cb = $this->getConnection()->getCommandBuilder();
 		$table = $this->getModelTable((string)$type);
 
 		$rows = $cb
 			->createFindCommand($table,$this->getPkCriteria($table, $primaryKeyList))
 			->queryAll();
 
-		$list = new CDataCollection;
+		$list = array();
 		
 		foreach($rows as $row)
 		{
 			$model = new $type;
 			$model->setStoragedAttributes($row);
-			$list->add($model);
+			$list[] = $model;
 		}
 
+		Yii::endProfile(__METHOD__, 'ext.storage');
+		
 		return $list;
 	}
 	/**
@@ -165,7 +169,7 @@ class CDbStorage implements IDataStorage
 	 * @param string|CDbConnection $component id of Yii::app() component, or object of CDbConnection
 	 * @see getDbConnection
 	 */
-	public function setDbConnection($component)
+	public function setConnection($component)
 	{
 		if(!is_object($component))
 		{
@@ -187,10 +191,10 @@ class CDbStorage implements IDataStorage
 	 * @return CDbConnection
 	 * @see CDbConnection
 	 */
-	public function getDbConnection()
+	public function getConnection()
 	{
 		if(is_null($this->_db))
-			$this->setDbConnection("db");
+			$this->setConnection("db");
 
 		return $this->_db;
 	}
@@ -242,7 +246,7 @@ class CDbStorage implements IDataStorage
 	{
 		if(!$this->_model_table_pk->offsetExists($table))
 		{
-			$primaryKey = $this->getDbConnection()
+			$primaryKey = $this->getConnection()
 				->getSchema()
 				->getTable($table)
 				->primaryKey;

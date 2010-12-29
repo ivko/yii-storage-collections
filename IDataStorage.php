@@ -62,7 +62,7 @@ interface IDataStorage
 	 *
 	 * @param  $type
 	 * @param array $primaryKeyList
-	 * @return void
+	 * @return IModelStorage[]
 	 */
 	function findAllByPk($type, array $primaryKeyList);
 }
