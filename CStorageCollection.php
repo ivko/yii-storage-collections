@@ -8,6 +8,8 @@
  * @license MIT license
  */
 
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR."CBaseStorageCollection.php";
+
 /**
  * Class CStorageCollection
  *
@@ -82,16 +84,19 @@ class CStorageCollection extends CBaseStorageCollection implements IDataStorage
 	 */
 	public function findByPk($type, $primaryKey)
 	{
-		Yii::beginProfile(__METHOD__, 'ext.storage');
+		$model = null;
+		
 		/** @var $storage CDbStorage */
 		foreach($this as $storage)
 		{
-			if(($model = $storage->findByPk($type, $primaryKey)) instanceof $type)
-				return $model;
+			if(($item = $storage->findByPk($type, $primaryKey)) instanceof $type)
+			{
+				$model = $item;
+				break;
+			}
 		}
 
-		Yii::endProfile(__METHOD__, 'ext.storage');
-		return null;
+		return $model;
 	}
 	/**
 	 * Get model collection by primary key
@@ -102,8 +107,6 @@ class CStorageCollection extends CBaseStorageCollection implements IDataStorage
 	 */
 	public function findAllByPk($type, array $primaryKeyList)
 	{
-		Yii::beginProfile(__METHOD__, 'ext.storage');
-
 		$findList = array();
 		foreach ($primaryKeyList as $key)
 			$findList[$key] = $key;
@@ -123,8 +126,6 @@ class CStorageCollection extends CBaseStorageCollection implements IDataStorage
 				break;
 		}
 
-		Yii::endProfile(__METHOD__, 'ext.storage');
-		
 		return $list;
 	}
 }

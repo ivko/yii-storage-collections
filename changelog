@@ -1,8 +1,12 @@
-Version 0.1 December 23,2010
+Version 0.1 December 23, 2010
 - New: Added CRoutedCollection abstract class, implements design to use primary key based sharding
 - New: Added CRoutedException class, implements exception that is caused in routed collection operations
 - Chg: Renamed IStoragedModel to IStorageModel
 - New: Added more phpdoc
 
+December 29, 2010
 - Added CHashRoutedCollection
 - Refactoring of CStorageCollection to CBaseCollection with IApplicationComponent interface.
+
+December 30, 2010
+- Optimize refactoring, using Yii CProfileLogRoute.

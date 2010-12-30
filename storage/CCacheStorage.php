@@ -39,7 +39,10 @@ class CCacheStorage implements IDataStorage
 		}
 
 		$key = $this->getModelKey($model);
-		return $this->getCache()->set($key,$model);
+		$result = $this->getCache()->set($key,$model);
+		
+		return $result;
+
 	}
 	/**
 	 * Update model in storage
@@ -90,13 +93,7 @@ class CCacheStorage implements IDataStorage
 	 */
 	public function findByPk($type, $primaryKey)
 	{
-		Yii::beginProfile(__METHOD__, 'ext.storage');
-
-		$data = $this->getCache()->get($this->getKey($type, $primaryKey));
-
-		Yii::endProfile(__METHOD__, 'ext.storage');
-		
-		return $data;
+		return $this->getCache()->get($this->getKey($type, $primaryKey));
 	}
 	/**
 	 * Get models by primary key list
@@ -107,7 +104,6 @@ class CCacheStorage implements IDataStorage
 	 */
 	public function findAllByPk($type, array $primaryKeyList)
 	{
-		Yii::beginProfile(__METHOD__, 'ext.storage');
 		$list = array();
 		
 		$listKey = $this->getListKey($type, $primaryKeyList);
@@ -117,8 +113,6 @@ class CCacheStorage implements IDataStorage
 			if($item instanceof $type)
 				$list[] = $item;
 
-		Yii::endProfile(__METHOD__, 'ext.storage');
-		
 		return $list;
 	}
 	/**
@@ -147,6 +141,7 @@ class CCacheStorage implements IDataStorage
 			$this->_cache = $cache;
 		else
 			throw new CStorageException(Yii::t("db.storage", "Cache component is not instance of CCache"));
+
 	}
 	/**
 	 * @param IStorageModel $model

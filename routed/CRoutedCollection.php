@@ -8,6 +8,8 @@
  * @license MIT license
  */
 
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR."CRoutedException.php";
+
 /**
  * Collection implements routed storage list.
  *

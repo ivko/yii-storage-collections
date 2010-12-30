@@ -57,6 +57,7 @@ class CDbStorage extends CApplicationComponent implements IDataStorage
 		$result = $insert->execute();
 
 		$model->setPrimaryKey( $this->getConnection()->getLastInsertID() );
+
 		return $result;
 	}
 	/**
@@ -89,9 +90,11 @@ class CDbStorage extends CApplicationComponent implements IDataStorage
 		$cb = $this->getConnection()->getCommandBuilder();
 		$table = $this->getModelTable((string)$type);
 
-		return $cb
+		$deleted =  $cb
 			->createDeleteCommand($table, $this->getPkCriteria($table, $primaryKey))
 			->execute();
+
+		return $deleted;
 	}
 	/**
 	 * Check exists model in storage by pk
@@ -131,6 +134,7 @@ class CDbStorage extends CApplicationComponent implements IDataStorage
 		
 		$model = new $type;
 		$model->setStoragedAttributes($row);
+
 		return $model;
 	}
 	/**
@@ -142,8 +146,6 @@ class CDbStorage extends CApplicationComponent implements IDataStorage
 	 */
 	public function findAllByPk($type, array $primaryKeyList)
 	{
-		Yii::beginProfile(__METHOD__, 'ext.storage');
-
 		$cb = $this->getConnection()->getCommandBuilder();
 		$table = $this->getModelTable((string)$type);
 
@@ -160,8 +162,6 @@ class CDbStorage extends CApplicationComponent implements IDataStorage
 			$list[] = $model;
 		}
 
-		Yii::endProfile(__METHOD__, 'ext.storage');
-		
 		return $list;
 	}
 	/**
@@ -253,7 +253,7 @@ class CDbStorage extends CApplicationComponent implements IDataStorage
 
 			$this->_model_table_pk->add($table, $primaryKey);
 		}
-		
+
 		return $this->_model_table_pk->itemAt($table);
 	}
 	/**
@@ -270,6 +270,7 @@ class CDbStorage extends CApplicationComponent implements IDataStorage
 			$this->getPrimaryKey($table),
 			$primaryKey
 		);
+
 		return $criteria;
 	}
 }

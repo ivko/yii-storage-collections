@@ -2,7 +2,10 @@
 /**
  * File contains class CBaseStorageCollection
  */
- 
+
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR."IDataStorage.php";
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR."IStorageModel.php";
+
 /**
  * Class CBaseStorageCollection 
  *
@@ -56,9 +59,11 @@ class CBaseStorageCollection extends CTypedList implements IApplicationComponent
 		{
 			/** @var $item IApplicationComponent */
 			$item = Yii::app()->getComponent($item);
-			$item->init();
-		}
+			if(!$item->getIsInitialized())
+				$item->init();
 
+		}
+		
 		parent::insertAt($index, $item);
 	}
 	/**

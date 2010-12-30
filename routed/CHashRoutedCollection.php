@@ -2,7 +2,9 @@
 /**
  * File contains class CHashRoutedCollection
  */
- 
+
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR."CRoutedCollection.php";
+
 /**
  * Class CHashRoutedCollection 
  *
@@ -14,12 +16,30 @@
 class CHashRoutedCollection extends CRoutedCollection
 {
 	private $_idStep = 1;
-
+	/**
+	 * @return int
+	 */
 	public function getIdStep()
 	{
 		return (int)$this->_idStep;
 	}
-
+	/**
+	 * Set count id step. Defaults to zero.
+	 * If it setted > 1, list of models with some range id will be at one storage.
+	 *
+	 * Example:
+	 * <code>
+	 * $m = new CHashRoutedCollection;
+	 * $m->setItems(array('shard1','shard2'));
+	 * $m->setIdStep(10);
+	 * $m->init();
+	 *
+	 * $m->findAll('model', array(1,2,3,4,5,6,7)); // use ((1..7)/10)%2 = 0 (shard1)
+	 * $m->findAll('model', array(1,2,11,12)); // use ((1..2)/10)%2 = 0 (shard1) and ((11..12)/10)%2 = 1 (shard2)
+	 * </code>
+	 *
+	 * @param int $step
+	 */
 	public function setIdStep($step)
 	{
 		$this->_idStep = (int)$step;
