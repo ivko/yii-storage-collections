@@ -82,6 +82,10 @@ class CCachedDbStorage extends CDbStorage
 	{
 		if( parent::insert($model) )
 		{
+			if($this->isModelHasExpressionValue($model))
+			{
+				$model = parent::findByPk(get_class($model), $model->getPrimaryKey());
+			}
 			$this->getCache()->update($model);
 		}
 	}
@@ -94,6 +98,10 @@ class CCachedDbStorage extends CDbStorage
 	{
 		if(parent::update($model))
 		{
+			if($this->isModelHasExpressionValue($model))
+			{
+				$model = parent::findByPk(get_class($model), $model->getPrimaryKey());
+			}
 			$this->getCache()->update($model);
 		}
 	}
@@ -178,5 +186,24 @@ class CCachedDbStorage extends CDbStorage
 		}
 
 		return $list;
+	}
+	/**
+	 * @param IStorageModel $model
+	 * @return bool
+	 */
+	protected function isModelHasExpressionValue(IStorageModel $model)
+	{
+		$data = $model->getStorageAttributes();
+
+		$hasExpression = false;
+		foreach($data as $value)
+		{
+			if(is_object($value))
+			{
+				$hasExpression = true;
+				break;
+			}
+		}
+		return $hasExpression;
 	}
 }

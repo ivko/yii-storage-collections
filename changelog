@@ -16,3 +16,4 @@ January 6, 2011
 - Deleted finder code, because it's no a fine way to create API reference.
 - Simple rename refactoring, fixed phpdoc
 - Fixed CDbStorage to save order.
+- Fixed CCachedDbStorage for check expressions

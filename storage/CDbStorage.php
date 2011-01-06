@@ -77,7 +77,7 @@ class CDbStorage extends CApplicationComponent implements IDataStorage
 		{
 			unset($data[$primaryKeyName]);
 		}
-
+		
 		$primaryKey = $model->getPrimaryKey();
 		$update = $cb->createUpdateCommand($table, $data, $this->getPkCriteria($table, $primaryKey));
 		return $update->execute();
