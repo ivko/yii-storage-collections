@@ -10,3 +10,9 @@ December 29, 2010
 
 December 30, 2010
 - Optimize refactoring, using Yii CProfileLogRoute.
+
+January 6, 2011
+- Added CCachedDbStorage
+- Deleted finder code, because it's no a fine way to create API reference.
+- Simple rename refactoring, fixed phpdoc
+- Fixed CDbStorage to save order.

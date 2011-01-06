@@ -1,11 +1,11 @@
 <?php
 /**
  * File contains class CShardCollection
- * 
- * @author mitallast <mitallast@gmail.com>
- * @link http://github.com/mitallast/yii-srorage-collections
- * @copyright Copyright &copy 2010-2011 mitallast
- * @license MIT license
+ *
+ * @author Alexey Korchevsky <mitallast@gmail.com>
+ * @link https://github.com/mitallast/yii-storage-collections
+ * @copyright Alexey Korchevsky <mitallast@gmail.com> 2010-2011
+ * @license https://github.com/mitallast/yii-storage-collections/blob/master/license
  */
 
 require_once dirname(__FILE__).DIRECTORY_SEPARATOR."CRoutedException.php";
@@ -13,9 +13,9 @@ require_once dirname(__FILE__).DIRECTORY_SEPARATOR."CRoutedException.php";
 /**
  * Collection implements routed storage list.
  *
- * @author mitallast <mitallast@gmail.com>
+ * @author Alexey Korchevsky <mitallast@gmail.com>
+ * @package ext.datamapper.routed
  * @version 0.1
- * @package system
  * @since 0.1
  * @abstract
  */
@@ -111,9 +111,9 @@ abstract class CRoutedCollection extends CBaseStorageCollection implements IData
 			->update($model);
 	}
 	/**
-	 * Get storage component for create new model. 
+	 * Get storage component for create new model.
 	 * As example, if application using sharding, rule can be $id = ( microtime(1) * 1000000) % $this->count.
-	 * 
+	 *
 	 * @abstract
 	 * @return IDataStorage
 	 */
@@ -129,13 +129,13 @@ abstract class CRoutedCollection extends CBaseStorageCollection implements IData
 	/**
 	 * Get storage component for delete model by primary key.
 	 * As default, you can use logic of getShardForUpdate.
-	 * 
+	 *
 	 * @abstract
 	 * @return IDataStorage
 	 */
 	abstract protected function getShardIdForDelete($type, $primaryKey);
 	/**
-	 * Get storage component for select model by primary key. 
+	 * Get storage component for select model by primary key.
 	 * As default, you can use logic of getShardForUpdate.
 	 *
 	 * @abstract

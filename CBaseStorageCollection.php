@@ -1,18 +1,23 @@
 <?php
 /**
  * File contains class CBaseStorageCollection
+ *
+ * @author Alexey Korchevsky <mitallast@gmail.com>
+ * @link https://github.com/mitallast/yii-storage-collections
+ * @copyright Alexey Korchevsky <mitallast@gmail.com> 2010-2011
+ * @license https://github.com/mitallast/yii-storage-collections/blob/master/license
  */
 
 require_once dirname(__FILE__).DIRECTORY_SEPARATOR."IDataStorage.php";
 require_once dirname(__FILE__).DIRECTORY_SEPARATOR."IStorageModel.php";
 
 /**
- * Class CBaseStorageCollection 
+ * Class CBaseStorageCollection
  *
- * @author php2 <php2@gmail.com>
- * @version
- * @package
- * @since
+ * @author Alexey Korchevsky <mitallast@gmail.com>
+ * @package ext.datamapper
+ * @version 0.1
+ * @since 0.1
  */
 class CBaseStorageCollection extends CTypedList implements IApplicationComponent
 {
@@ -31,7 +36,6 @@ class CBaseStorageCollection extends CTypedList implements IApplicationComponent
 	{
 		$this->_is_initialized = true;
 		$this->setReadOnly(true);
-
 	}
 	/**
 	 * @return boolean whether the {@link init()} method has been invoked.
@@ -63,7 +67,7 @@ class CBaseStorageCollection extends CTypedList implements IApplicationComponent
 				$item->init();
 
 		}
-		
+
 		parent::insertAt($index, $item);
 	}
 	/**

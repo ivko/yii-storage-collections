@@ -2,20 +2,19 @@
 /**
  * File contains interface IDataStorage
  *
- * @author mitallast <mitallast@gmail.com>
- * @link http://github.com/mitallast/yii-srorage-collections
- * @copyright Copyright &copy 2010-2011 mitallast
- * @license MIT license
+ * @author Alexey Korchevsky <mitallast@gmail.com>
+ * @link https://github.com/mitallast/yii-storage-collections
+ * @copyright Alexey Korchevsky <mitallast@gmail.com> 2010-2011
+ * @license https://github.com/mitallast/yii-storage-collections/blob/master/license
  */
 
 /**
  * Interface IDataStorage
  *
- * @author mitallast <mitallast@gmail.com>
+ * @author Alexey Korchevsky <mitallast@gmail.com>
+ * @package ext.datamapper
  * @version 0.1
- * @package system
  * @since 0.1
- * @throws CStorageException
  */
 interface IDataStorage
 {

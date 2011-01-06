@@ -2,10 +2,10 @@
 /**
  * File contains class CStorageCollection
  *
- * @author mitallast <mitallast@gmail.com>
- * @link http://github.com/mitallast/yii-srorage-collections
- * @copyright Copyright &copy 2010-2011 mitallast
- * @license MIT license
+ * @author Alexey Korchevsky <mitallast@gmail.com>
+ * @link https://github.com/mitallast/yii-storage-collections
+ * @copyright Alexey Korchevsky <mitallast@gmail.com> 2010-2011
+ * @license https://github.com/mitallast/yii-storage-collections/blob/master/license
  */
 
 require_once dirname(__FILE__).DIRECTORY_SEPARATOR."CBaseStorageCollection.php";
@@ -13,15 +13,13 @@ require_once dirname(__FILE__).DIRECTORY_SEPARATOR."CBaseStorageCollection.php";
 /**
  * Class CStorageCollection
  *
- * @author mitallast <mitallast@gmail.com>
+ * @author Alexey Korchevsky <mitallast@gmail.com>
+ * @package ext.datamapper
  * @version 0.1
- * @package system
  * @since 0.1
- * @throws CStorageException
  */
 class CStorageCollection extends CBaseStorageCollection implements IDataStorage
 {
-
 	/**
 	 * Insert new model and set it primary key
 	 *
@@ -85,7 +83,7 @@ class CStorageCollection extends CBaseStorageCollection implements IDataStorage
 	public function findByPk($type, $primaryKey)
 	{
 		$model = null;
-		
+
 		/** @var $storage CDbStorage */
 		foreach($this as $storage)
 		{
@@ -110,7 +108,7 @@ class CStorageCollection extends CBaseStorageCollection implements IDataStorage
 		$findList = array();
 		foreach ($primaryKeyList as $key)
 			$findList[$key] = $key;
-		
+
 		$list = array();
 		foreach ($this as $storage)
 		{

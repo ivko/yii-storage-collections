@@ -1,16 +1,21 @@
 <?php
 /**
  * File contains class CHashRoutedCollection
+ *
+ * @author Alexey Korchevsky <mitallast@gmail.com>
+ * @link https://github.com/mitallast/yii-storage-collections
+ * @copyright Alexey Korchevsky <mitallast@gmail.com> 2010-2011
+ * @license https://github.com/mitallast/yii-storage-collections/blob/master/license
  */
 
 require_once dirname(__FILE__).DIRECTORY_SEPARATOR."CRoutedCollection.php";
 
 /**
- * Class CHashRoutedCollection 
+ * Class CHashRoutedCollection
  *
- * @author php2 <php2@gmail.com>
+ * @author Alexey Korchevsky <mitallast@gmail.com>
+ * @package ext.datamapper.routed
  * @version 0.1
- * @package datamapper.routed
  * @since 0.1
  */
 class CHashRoutedCollection extends CRoutedCollection
@@ -76,7 +81,7 @@ class CHashRoutedCollection extends CRoutedCollection
 	{
 		if(is_string($primaryKey))
 			$primaryKey = crc32($primaryKey);
-		
+
 		$primaryKey = (int)$primaryKey/$this->getIdStep();
 
 		return ((int)$primaryKey) % $this->count();

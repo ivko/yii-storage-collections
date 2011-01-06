@@ -1,4 +1,4 @@
-This extention implements instruments to create applications using 
+This extention implements instruments to create applications using
 sharding , replication and other technologies, using multiple databases.
 
 How it works.
@@ -20,7 +20,7 @@ class Post extends CController
 		{
 			throw new CHttpException(404, Yii::t('app', 'Post not found'));
 		}
-		
+
 		$this->render('view', array(
 			'post' => $post;
 		));
@@ -29,7 +29,7 @@ class Post extends CController
 </code>
 
 It's like very simple. But what is doing, when controller call storage->findByPk() method ?
-In this example, storage is component with interface IDataStorage - simple crud api. 
+In this example, storage is component with interface IDataStorage - simple crud api.
 If it a small project, it's need one server with DB , Sphinx and memcache if needed. Config of storage component like this:
 <code>
 return array(
@@ -45,7 +45,7 @@ return array(
 );
 </code>
 
-controller will be use only mysql. But what is doing, when one mysql contains millions rows , and time of selection is big? 
+controller will be use only mysql. But what is doing, when one mysql contains millions rows , and time of selection is big?
 An example, it's possible use sharding! I'm can get CRoutedCollection and add to it logic of shard rules, and name it as SimpleShardedCollection class:
 return array(
 	...
@@ -80,9 +80,9 @@ return array(
 		"mysqlStorage2" => array("class" => "CDbStorage", "connection"=>'db2', ...),
 		"mysqlStorage3" => array("class" => "CDbStorage", "connection"=>'db3', ...),
 		"mysqlStorage4" => array("class" => "CDbStorage", "connection"=>'db4', ...),
-		
+
 		"memcached" => array(),
-		
+
 		"mysqlStorage" => array(
 			"class" => "SimpleShardedCollection",
 			"items" => array(

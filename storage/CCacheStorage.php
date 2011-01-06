@@ -2,20 +2,19 @@
 /**
  * File contains class CCacheStorage
  *
- * @author mitallast <mitallast@gmail.com>
- * @link http://github.com/mitallast/yii-srorage-collections
- * @copyright Copyright &copy 2010-2011 mitallast
- * @license MIT license
+ * @author Alexey Korchevsky <mitallast@gmail.com>
+ * @link https://github.com/mitallast/yii-storage-collections
+ * @copyright Alexey Korchevsky <mitallast@gmail.com> 2010-2011
+ * @license https://github.com/mitallast/yii-storage-collections/blob/master/license
  */
 
 /**
  * Class CCacheStorage
  *
- * @author mitallast <mitallast@gmail.com>
+ * @author Alexey Korchevsky <mitallast@gmail.com>
+ * @package ext.datamapper.storage
  * @version 0.1
- * @package system
  * @since 0.1
- * @throws CStorageException
  */
 class CCacheStorage implements IDataStorage
 {
@@ -40,7 +39,7 @@ class CCacheStorage implements IDataStorage
 
 		$key = $this->getModelKey($model);
 		$result = $this->getCache()->set($key,$model);
-		
+
 		return $result;
 
 	}
@@ -105,10 +104,10 @@ class CCacheStorage implements IDataStorage
 	public function findAllByPk($type, array $primaryKeyList)
 	{
 		$list = array();
-		
+
 		$listKey = $this->getListKey($type, $primaryKeyList);
 		$data = $this->getCache()->mget($listKey);
-		
+
 		foreach ($data as $item)
 			if($item instanceof $type)
 				$list[] = $item;
